@@ -22,6 +22,7 @@ Este proyecto es un **backend desarrollado en Django y Django REST Framework (DR
 ## 📂 Estructura del proyecto
 
 ---
+---
 tienda_backend/                # Proyecto principal
 │── manage.py                  # Script de gestión de Django
 │── tienda_backend/            # Configuración global del proyecto
@@ -77,6 +78,7 @@ tienda_backend/                # Proyecto principal
 │── static/                    # Archivos estáticos (CSS, JS, imágenes)
 │── templates/                 # Plantillas HTML si usas Django templates
 
+---
 ---
 ## ⚙️ Instalación y configuración
 
