@@ -74,8 +74,7 @@ tienda_backend/                # Proyecto principal
 │── requirements.txt           # Dependencias del proyecto
 │── README.md                  # Documentación inicial
 │── .env                       # Variables de entorno
-│── static/                    # Archivos estáticos (CSS, JS, imágenes)
-│── templates/                 # Plantillas HTML si usas Django templates
+
 ```
 ---
 ## ⚙️ Instalación y configuración
