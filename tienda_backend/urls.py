@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
-#from inventario.urls import urlpatternsPerson 
+from apps.inventario.urls import urlpatternsTienda 
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from apps.usuarios import views
 
@@ -8,7 +8,7 @@ from apps.usuarios import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    #path('api/', include(urlpatternsPerson)),
+    path('api/', include(urlpatternsTienda)),
     #ruta para registrar
     re_path ('register/', views.register),
     #ruta para hacer login
