@@ -81,8 +81,8 @@ tienda_backend/                # Proyecto principal
 
 1. Clonar el repositorio:
    ```bash
-   git clone https://github.com/tuusuario/inventario_api.git
-   cd inventario_api
+   [https://github.com/alejcuevas97/TIENDA-MEXICO.git]
+   cd TIENDA-MEXICO
    ```
 
 2. Crear entorno virtual e instalar dependencias:
