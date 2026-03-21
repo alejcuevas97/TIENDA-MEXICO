@@ -21,27 +21,63 @@ Este proyecto es un **backend desarrollado en Django y Django REST Framework (DR
 
 ## 📂 Estructura del proyecto
 
-```
-inventario_api/
-│── inventario/          # App principal
-│   ├── models.py        # Modelo Producto
-│   ├── serializers.py   # Serializador Producto
-│   ├── views.py         # Vistas con DRF
-│   └── urls.py          # Rutas de la app
+---
+tienda_backend/                # Proyecto principal
+│── manage.py                  # Script de gestión de Django
+│── tienda_backend/            # Configuración global del proyecto
+│   ├── __init__.py
+│   ├── settings.py            # Configuración general
+│   ├── urls.py                # Rutas principales
+│   ├── wsgi.py                # Servidor WSGI
+│   └── asgi.py                # Servidor ASGI
 │
-│── usuarios/            # App de usuarios
-│   ├── models.py        # Modelo Usuario
-│   ├── serializers.py   # Serializador Usuario
-│   ├── views.py         # Registro/Login
-│   └── urls.py          # Rutas de usuarios
+│── apps/                      # Carpeta contenedora de aplicaciones
+│   ├── api/                   # API central (DRF)
+│   │   ├── __init__.py
+│   │   ├── urls.py
+│   │   ├── views.py
+│   │   ├── serializers.py
+│   │   └── tests.py
+│   │
+│   ├── inventario/            # Gestión de productos e inventario
+│   │   ├── __init__.py
+│   │   ├── models.py          # Modelo Producto
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   │   ├── urls.py
+│   │   └── tests.py
+│   │
+│   ├── tickets/               # Soporte y tickets de clientes
+│   │   ├── __init__.py
+│   │   ├── models.py          # Modelo Ticket
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   │   ├── urls.py
+│   │   └── tests.py
+│   │
+│   ├── tienda/                # Lógica de la tienda (órdenes, pagos)
+│   │   ├── __init__.py
+│   │   ├── models.py          # Modelo Orden/Carrito
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   │   ├── urls.py
+│   │   └── tests.py
+│   │
+│   └── usuarios/              # Gestión de usuarios y autenticación
+│       ├── __init__.py
+│       ├── models.py          # Modelo Usuario extendido
+│       ├── serializers.py
+│       ├── views.py           # Registro/Login
+│       ├── urls.py
+│       └── tests.py
 │
-│── inventario_api/      # Configuración del proyecto
-│   ├── settings.py
-│   └── urls.py
-```
+│── requirements.txt           # Dependencias del proyecto
+│── README.md                  # Documentación inicial
+│── .env                       # Variables de entorno
+│── static/                    # Archivos estáticos (CSS, JS, imágenes)
+│── templates/                 # Plantillas HTML si usas Django templates
 
 ---
-
 ## ⚙️ Instalación y configuración
 
 1. Clonar el repositorio:
@@ -145,7 +181,6 @@ POST /api/productos/
 - Reportes estadísticos del inventario.
 ```
 
----
 
-Alejandro, este README está listo para que lo uses en tu repositorio.  
-¿Quieres que lo adapte específicamente a tu **caso agrícola** (ejemplo: inventario de insumos, animales, cultivos) para que quede más alineado con tu portafolio?
+
+
