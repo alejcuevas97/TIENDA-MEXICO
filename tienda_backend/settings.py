@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'apps.inventario',
+    'apps.tickets',
     'corsheaders',
     
     
@@ -131,7 +132,7 @@ REST_FRAMEWORK={
     )
 }
 
-CORS_ALLOW_ALL_ORIGINS = [
-    "http://localhost:3000",
+CORS_ALLOW_ALL_ORIGINS = True 
     
-]
+    #"http://localhost:3000"
+    
