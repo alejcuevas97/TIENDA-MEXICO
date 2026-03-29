@@ -109,7 +109,7 @@ tienda_backend/                # Proyecto principal
    ```
 
 ---
-
+### DIRECCION BACKEND https://tienda-mexico-1.onrender.com
 ## 🔑 Endpoints principales
 
 ### Autenticación
