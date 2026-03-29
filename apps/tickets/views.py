@@ -46,7 +46,7 @@ def crear_ticket(request):
     else:
         ticket_form= TicketForm()
         formset= TicketItemFormSet()
-        return render(request,'crear_ticket.html',{'ticket_form':ticket_form,'formset':formset})
+        return render(request,{'ticket_form':ticket_form,'formset':formset})
     
                                 
 
