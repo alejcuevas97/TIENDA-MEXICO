@@ -15,3 +15,5 @@ whitenoise
 psycopg2-binary
 
 django-browser-reload
+
+dj-database-url
