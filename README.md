@@ -171,7 +171,15 @@ POST /api/productos/
 - Django REST Framework
 - JWT (SimpleJWT)
 - SQLite (por defecto)
+-PostgreSQL
 
+---
+Acceder a la documentación
+-Swagger UI: http://localhost:8000/swagger/
+
+-ReDoc: http://localhost:8000/redoc/
+
+-Esquema JSON/YAML: http://localhost:8000/swagger.json o .yaml
 ---
 
 ## ✨ Próximas mejoras
