@@ -153,6 +153,6 @@ REST_FRAMEWORK = {
 }
 SPECTACULAR_SETTINGS = {
     'TITLE': 'API Tienda_Mexico',
-    'DESCRIPTION': 'Documentación generada con drf-spectacular',
+    'DESCRIPTION': 'Apis creada para Tienda_Mexico',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,}
