@@ -86,14 +86,9 @@ WSGI_APPLICATION = 'tienda_backend.wsgi.application'
 DATABASES_URL=os.getenv('DATABASE_URL')
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-
-
-    #'default':
-     #   dj_database_url.config('DATABASE_URL',conn_max_age=600,ssl_require=True)
+   
+    'default':
+        dj_database_url.config('DATABASE_URL',conn_max_age=600,ssl_require=True)
 
     
 }
