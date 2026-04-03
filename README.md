@@ -109,7 +109,7 @@ tienda_backend/                # Proyecto principal
    ```
 
 ---
-### DIRECCION BACKEND https://tienda-mexico-1.onrender.com
+### DIRECCION BACKEND https://tienda-mexico.onrender.com
 ## 🔑 Endpoints principales
 
 ### Autenticación
@@ -174,12 +174,12 @@ POST /api/productos/
 -PostgreSQL
 
 ---
-Acceder a la documentación
--Swagger UI: http://localhost:8000/swagger/
+### Acceder a la documentación
+-https://tienda-mexico.onrender.com/redoc/
 
--ReDoc: http://localhost:8000/redoc/
+-https://tienda-mexico.onrender.com/docs/
 
--Esquema JSON/YAML: http://localhost:8000/swagger.json o .yaml
+-https://tienda-mexico.onrender.com/shema/
 ---
 
 ## ✨ Próximas mejoras
