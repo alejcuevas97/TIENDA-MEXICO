@@ -8,7 +8,7 @@ from apps.usuarios import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    path('api/', include(urlpatternsTienda)),
+    path('', include(urlpatternsTienda)),
     #ruta para registrar
     re_path ('register/', views.register),
     #ruta para hacer login
@@ -19,3 +19,5 @@ urlpatterns = [
     path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     
 ]
+#documentar la app
+

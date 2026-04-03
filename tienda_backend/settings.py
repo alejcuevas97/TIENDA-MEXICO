@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.tickets',
     'apps',
     'corsheaders',
+    'drf_spectacular',
     
     
     
@@ -85,11 +86,14 @@ WSGI_APPLICATION = 'tienda_backend.wsgi.application'
 DATABASES_URL=os.getenv('DATABASE_URL')
 
 DATABASES = {
-    #'default': {
-     ##  'NAME': BASE_DIR / 'db.sqlite3',
-    
-    'default':
-        dj_database_url.config('DATABASE_URL',conn_max_age=600,ssl_require=True)
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+
+
+    #'default':
+     #   dj_database_url.config('DATABASE_URL',conn_max_age=600,ssl_require=True)
 
     
 }
@@ -146,3 +150,14 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+#documentar la apis
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'API Tienda_Mexico',
+    'DESCRIPTION': 'Documentación generada con drf-spectacular',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,}

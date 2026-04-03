@@ -3,6 +3,7 @@ from rest_framework import status
 from .models import Inventario
 from rest_framework.views import APIView
 from .serializers import UserSerializersProd
+from drf_spectacular.utils import extend_schema
 
 
 #vistas para consultar todos los productos
