@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'apps.inventario',
     'apps.tickets',
+    'apps',
     'corsheaders',
     
     
