@@ -1,5 +1,8 @@
 # 🛠 Backend de Inventario con Django
 
+### DIRECCION BACKEND https://tienda-mexico.onrender.com
+
+
 Este proyecto es un **backend desarrollado en Django y Django REST Framework (DRF)** que incluye:
 
 - Sistema de **registro e inicio de sesión** con autenticación JWT.
@@ -109,7 +112,7 @@ tienda_backend/                # Proyecto principal
    ```
 
 ---
-### DIRECCION BACKEND https://tienda-mexico.onrender.com
+
 ## 🔑 Endpoints principales
 
 ### Autenticación
