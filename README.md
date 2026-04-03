@@ -1,6 +1,6 @@
 # 🛠 Backend de Inventario con Django
 
-### DIRECCION BACKEND https://tienda-mexico.onrender.com
+### DIRECCION APIS https://tienda-mexico.onrender.com
 
 
 Este proyecto es un **backend desarrollado en Django y Django REST Framework (DRF)** que incluye:
