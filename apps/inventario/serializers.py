@@ -5,5 +5,5 @@ from .models import Inventario
 class UserSerializersProd(ModelSerializer):
     class Meta:
         model= Inventario
-        fields=['id','nombre','descripcion','precio']
+        fields=['Codigo','Producto','Precio_1kg','Precio_1_4kg','Precio_100kg']
         

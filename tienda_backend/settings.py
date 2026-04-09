@@ -86,9 +86,12 @@ WSGI_APPLICATION = 'tienda_backend.wsgi.application'
 DATABASES_URL=os.getenv('DATABASE_URL')
 
 DATABASES = {
-   
-    'default':
-        dj_database_url.config('DATABASE_URL',conn_max_age=600,ssl_require=True)
+   'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+    #'default':
+     #   dj_database_url.config('DATABASE_URL',conn_max_age=600,ssl_require=True)
 
     
 }
@@ -153,6 +156,6 @@ REST_FRAMEWORK = {
 }
 SPECTACULAR_SETTINGS = {
     'TITLE': 'API Tienda_Mexico',
-    'DESCRIPTION': 'Apis creada para Tienda_Mexico',
+    'DESCRIPTION': 'API creada para Tienda_Mexico',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,}
