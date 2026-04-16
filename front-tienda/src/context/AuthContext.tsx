@@ -12,6 +12,7 @@ import React from "react";
 interface User {
   name: string;
 }
+
 interface AuthContextType {
   user: User | null;
   login: (name: string, password: string) => Promise<void>;
@@ -28,38 +29,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = useCallback(() => {
     localStorage.removeItem("auth_token");
+    localStorage.removeItem("auth_user");
     setUser(null);
-    router.push("/login");
+    router.replace("/login");
   }, [router]);
 
-  const fetchUserData = useCallback(
-    async (token: string) => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const userData = await res.json();
-        setUser(userData);
-        setLoading(false);
-      } catch {
-        logout();
-      }
-    },
-    [logout],
-  );
-
   useEffect(() => {
-    const token = localStorage.getItem("auth_token");
-    if (token) {
-      fetchUserData(token);
-    } else {
+    try {
+      const savedUser = localStorage.getItem("auth_user");
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+    } catch {
+      localStorage.removeItem("auth_user");
+      setUser(null);
+    } finally {
       setLoading(false);
     }
-  }, [fetchUserData]);
+  }, []);
 
   const login = async (name: string, password: string) => {
+    setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, password }),
@@ -67,18 +59,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("auth_token", data.token);
-        setUser(data.user); // data.user
-        router.push("/dashboard");
-      } else {
-        throw new Error(data.message);
+      if (!res.ok) {
+        throw new Error(data?.message || "Credenciales inválidas");
       }
+
+      const normalizedUser = data?.user ?? { name };
+      localStorage.setItem("auth_token", data.token);
+      localStorage.setItem("auth_user", JSON.stringify(normalizedUser));
+
+      setUser(normalizedUser);
+      router.replace("/");
     } catch (error) {
       alert(
         "Error en el login: " +
           (error instanceof Error ? error.message : String(error)),
       );
+    } finally {
+      setLoading(false);
     }
   };
 

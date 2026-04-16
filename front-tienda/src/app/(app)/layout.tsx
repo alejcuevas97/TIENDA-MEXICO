@@ -1,4 +1,5 @@
 import AuthGuard from "@/src/components/AuthGuard";
+import { Header } from "@/src/components/Header";
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <AuthGuard>
       <div className={`${lato.className} min-h-full flex flex-col`}>
+        <Header />
         {children}
       </div>
     </AuthGuard>
