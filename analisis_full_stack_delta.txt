@@ -1,0 +1,61 @@
+ANALISIS FULL STACK (DELTA)
+Nuevas issues detectadas al analizar backend + frontend en conjunto
+Ruta base: /home/lila/Escritorio/R/TRABJO WEB/TIENDA-MEXICO
+
+1) Riesgo de fallo en login por slash final en ruta
+Archivos:
+- frontend/front-tienda/src/context/AuthContext.tsx
+- backend/tienda_backend/urls.py
+Detalle:
+- Frontend hace POST a /login (sin slash final).
+- Backend declara path('login/', ...).
+- Dependiendo de APPEND_SLASH y del proxy, un POST sin slash puede redirigir y perder body.
+Impacto:
+- Login puede fallar de forma intermitente segun entorno (dev/prod/reverse proxy).
+
+2) Fuga de password hasta localStorage por contrato combinado
+Archivos:
+- backend/apps/usuarios/serializers.py
+- backend/apps/usuarios/views.py
+- frontend/front-tienda/src/context/AuthContext.tsx
+Detalle:
+- Backend serializa y responde el campo password dentro de user.
+- Frontend guarda data.user completo en localStorage como auth_user.
+Impacto:
+- Dato sensible termina persistido en navegador.
+- Riesgo alto de seguridad (XSS, exfiltracion de credenciales, incumplimiento de buenas practicas).
+
+3) Contrato de datos incompatible en busqueda (aunque se corrija endpoint)
+Archivos:
+- frontend/front-tienda/src/components/SearchDropdown.tsx
+- backend/apps/inventario/serializers.py
+Detalle:
+- Frontend renderiza campos esperados: id, nombre/name/title, descripcion, precio.
+- Backend inventario expone Codigo, Producto, Precio_1kg, Precio_1_4kg, Precio_100kg (y hoy sin id explicito en serializer).
+Impacto:
+- Dropdown puede mostrar vacios, labels incompletos o llaves inestables.
+- Se rompe UX aunque la llamada HTTP responda 200.
+
+4) CORS restringido a localhost, bloqueo probable en despliegue frontend
+Archivo:
+- backend/tienda_backend/settings.py
+Detalle:
+- CORS_ALLOWED_ORIGINS incluye solo http://localhost:3000.
+- Si frontend se despliega en otro dominio, backend bloqueara el origen.
+Impacto:
+- En produccion la app puede quedar inoperable por errores CORS en navegador.
+
+5) AppConfig.name inconsistente en varias apps del backend
+Archivos:
+- backend/apps/api/apps.py
+- backend/apps/tienda/apps.py
+- backend/apps/usuarios/apps.py
+Detalle:
+- Se usa name='api' / 'tienda' / 'usuarios' en vez de rutas completas tipo apps.api, apps.tienda, apps.usuarios.
+- En este repo, los paquetes reales viven bajo apps/.
+Impacto:
+- Riesgo de registros de app/migrations inconsistentes y comportamiento no portable entre entornos.
+
+Resumen:
+- Estas issues no son solo de backend o frontend aislado; aparecen al integrar ambos.
+- Prioridad recomendada: 2, 1, 3, 4, 5.
