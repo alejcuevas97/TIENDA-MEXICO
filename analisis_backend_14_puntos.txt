@@ -1,0 +1,134 @@
+ANALISIS BACKEND - 14 HALLAZGOS CON EXPLICACION
+Ruta analizada: /home/lila/Escritorio/R/TRABJO WEB/TIENDA-MEXICO/backend
+
+1) requirements.txt con codificacion invalida (UTF-16 con bytes nulos)
+Archivo: backend/requirements.txt
+Que significa:
+- El archivo de dependencias no esta en texto plano normal (UTF-8/ASCII), sino con caracteres nulos entre letras.
+- Herramientas como pip suelen leer requirements.txt como texto plano; con este formato puede fallar el parseo.
+Impacto:
+- No se instalan dependencias y el proyecto no levanta.
+- Bloquea pruebas, desarrollo y despliegue.
+
+2) Configuracion de base de datos mal usada con dj_database_url
+Archivo: backend/tienda_backend/settings.py (linea de config de DATABASES)
+Que significa:
+- Se uso dj_database_url.config('DATABASE_URL', ...), donde ese primer argumento se interpreta como URL por defecto.
+- Lo correcto para leer variable de entorno es algo como config(default=..., env='DATABASE_URL') o usar os.getenv y parsear.
+Impacto:
+- Puede intentar conectarse usando literal "DATABASE_URL" como DSN.
+- La app puede arrancar con DB mal configurada o fallar en runtime.
+
+3) REST_FRAMEWORK declarado dos veces
+Archivo: backend/tienda_backend/settings.py
+Que significa:
+- Primero se define autenticacion JWT, despues se redefine REST_FRAMEWORK solo con schema.
+- En Python, la segunda asignacion reemplaza la primera.
+Impacto:
+- Se pierde configuracion JWT.
+- Endpoints esperados como protegidos pueden quedar sin autenticacion configurada.
+
+4) Procfile apunta a WSGI inexistente
+Archivo: backend/Procfile
+Que significa:
+- Dice: gunicorn mi_proyecto.wsgi
+- El modulo real del proyecto es tienda_backend.wsgi
+Impacto:
+- En plataformas tipo Render/Heroku, el proceso web no inicia.
+- Deploy fallido por error de import.
+
+5) Import incorrecto en ticket_service
+Archivo: backend/apps/tickets/ticket_service.py
+Que significa:
+- Se importa desde tickets.models, pero el paquete real en este repo es apps.tickets.models
+Impacto:
+- ModuleNotFoundError al ejecutar esa logica.
+- Flujo de tickets queda roto.
+
+6) Llamada de funcion con firma incorrecta en tickets
+Archivo: backend/apps/tickets/ticket_service.py
+Que significa:
+- Se llama validar_stock(ticket, producto, cantidad), pero validar_stock recibe (producto, cantidad).
+Impacto:
+- TypeError en ejecucion al crear ticket.
+- Se corta la transaccion de venta.
+
+7) Forms mal declarados en tickets (field vs fields y lista mal escrita)
+Archivo: backend/apps/tickets/forms.py
+Que significa:
+- En ModelForm Meta debe usarse "fields", no "field".
+- Se puso ['producto,cantidad'] (un solo string), en vez de ['producto', 'cantidad'].
+Impacto:
+- Formulario invalido o con comportamiento inesperado.
+- Pantallas/POST de ticket pueden fallar.
+
+8) Exposicion de password en serializer/respuestas
+Archivos:
+- backend/apps/usuarios/serializers.py
+- backend/apps/usuarios/views.py
+Que significa:
+- El serializer incluye password en campos serializados.
+- Se devuelve serial.data al registrar/login, por lo que password puede salir en respuesta.
+Impacto:
+- Riesgo serio de seguridad y compliance.
+- Filtracion de dato sensible por API.
+
+9) App usuarios no registrada correctamente
+Archivos:
+- backend/tienda_backend/settings.py
+- backend/apps/usuarios/apps.py
+Que significa:
+- "apps.usuarios" no aparece en INSTALLED_APPS.
+- Ademas, UsuariosConfig.name esta en "usuarios" en vez de "apps.usuarios".
+Impacto:
+- Migrations/modelos/signals de esa app pueden no cargar correctamente.
+- Comportamientos inconsistentes entre entornos.
+
+10) Manejo incorrecto de errores HTTP en inventario
+Archivo: backend/apps/inventario/views.py
+Que significa:
+- Si no existe objeto, algunas rutas siguen serializando/borrando sin validar None.
+- En put retorna 200 con mensaje de error en vez de 404.
+Impacto:
+- Puede lanzar excepciones 500.
+- API semantica incorrecta (clientes no pueden distinguir error real).
+
+11) Serializer de inventario incompleto respecto al modelo
+Archivos:
+- backend/apps/inventario/models.py
+- backend/apps/inventario/serializers.py
+Que significa:
+- El modelo pide campos obligatorios (ej: Categoria, Moneda), pero serializer no los incluye.
+Impacto:
+- POST puede fallar por campos requeridos faltantes.
+- Contrato API incompleto/inconsistente.
+
+12) ALLOWED_HOSTS abierto con '*'
+Archivo: backend/tienda_backend/settings.py
+Que significa:
+- El servidor acepta cualquier Host header.
+Impacto:
+- Riesgo de seguridad (host header attacks, comportamiento inesperado en produccion).
+- Mala practica para entornos reales.
+
+13) Logica incoherente y bloque muerto en tickets/views.py
+Archivo: backend/apps/tickets/views.py
+Que significa:
+- Hay codigo despues de returns que nunca se ejecuta.
+- Hay uso incorrecto de messages.error(request=...) en lugar de messages.error(request, ...).
+- Variables como producto/cantidad/ticket aparecen fuera de contexto en ese bloque.
+Impacto:
+- Mantenimiento dificil.
+- Posibles errores al refactorizar o al mover bloques.
+
+14) create_admin sin validar variables de entorno requeridas
+Archivo: backend/apps/management/commands/create_admin.py
+Que significa:
+- Si faltan DJANGO_SUPERUSER_USERNAME/EMAIL/PASSWORD, intenta crear usuario con None.
+Impacto:
+- Comando puede fallar o generar datos invalidos.
+- Despliegues automatizados poco confiables.
+
+Resumen general:
+- El backend contiene codigo real y estructura valida, pero hoy tiene varios errores de configuracion, seguridad y robustez.
+- Prioridad recomendada de arreglo: 1, 4, 5, 6, 7, 8, 3, 2, 9, 10, 11, 12, 13, 14.

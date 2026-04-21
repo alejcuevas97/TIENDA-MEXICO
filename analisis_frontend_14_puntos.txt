@@ -1,0 +1,137 @@
+ANALISIS FRONTEND - 14 HALLAZGOS CON EXPLICACION
+Ruta analizada: /home/lila/Escritorio/R/TRABJO WEB/TIENDA-MEXICO/frontend/front-tienda
+
+1) Login envia payload incompatible con backend
+Archivo: src/context/AuthContext.tsx
+Que significa:
+- El frontend manda { name, password }.
+- El backend actual espera username y password para autenticar.
+Impacto:
+- El login falla aunque el usuario exista.
+- Se genera error funcional base de acceso.
+
+2) Manejo de token inconsistente con la API real
+Archivo: src/context/AuthContext.tsx
+Que significa:
+- Se guarda data.token en localStorage.
+- El endpoint /login del backend devuelve user (sin token), y el token se obtiene en /token/.
+Impacto:
+- auth_token queda undefined o vacio.
+- Sesion aparentemente iniciada, pero sin credencial util para rutas protegidas.
+
+3) Endpoint de busqueda no coincide con backend
+Archivo: src/app/(app)/productos/page.tsx
+Que significa:
+- Busca en /productos/search.
+- El backend disponible expone rutas bajo /Productos/v1/tienda/... (segun codigo actual).
+Impacto:
+- Busqueda de productos rompe con 404/500.
+- Funcionalidad principal de modulo productos no opera.
+
+4) NEXT_PUBLIC_API_URL no esta validada
+Archivos:
+- src/context/AuthContext.tsx
+- src/app/(app)/productos/page.tsx
+Que significa:
+- Si la variable de entorno no existe, fetch usa URL "undefined/...".
+Impacto:
+- Fallos silenciosos o errores de red confusos.
+- Configuracion por ambiente fragil.
+
+5) Tipado incorrecto en useSearch (Promise<never[]>)
+Archivo: src/hooks/useSearch.ts
+Que significa:
+- El hook declara que searchFn devuelve never[], que no representa datos reales.
+- Se pierde seguridad de tipos para resultados.
+Impacto:
+- TypeScript no ayuda a detectar forma real de resultados.
+- Se propagan errores de contrato API a runtime.
+
+6) Uso de any en partes criticas
+Archivos:
+- src/app/(app)/productos/page.tsx
+- src/components/SearchDropdown.tsx
+Que significa:
+- Se desactivan chequeos de tipos en objetos que vienen de API.
+Impacto:
+- Mayor riesgo de errores en produccion por campos inexistentes/mal nombrados.
+- Refactors mas peligrosos.
+
+7) Navegacion duplicada en logout
+Archivos:
+- src/context/AuthContext.tsx
+- src/components/Header.tsx
+Que significa:
+- logout ya hace router.replace("/login"), pero Header despues hace router.push("/login").
+Impacto:
+- Redundancia y posibles estados de navegacion inestables.
+- Comportamiento innecesariamente complejo.
+
+8) Opcion "Ticket" sin navegacion real
+Archivo: src/components/Header.tsx
+Que significa:
+- Se muestra como item de menu, pero esta implementado como <div>, no como Link o boton funcional.
+Impacto:
+- UX incompleta; el usuario cree que existe modulo, pero no puede entrar.
+
+9) Errores de texto/consistencia en UI
+Archivos:
+- src/components/Header.tsx
+- src/app/(auth)/login/page.tsx
+Que significa:
+- "Contavilidad" tiene typo (deberia ser Contabilidad).
+- Marca inconsistente: "Dulces Lola" vs "Dulceria LoLa".
+Impacto:
+- Menor calidad percibida del producto.
+- Inconsistencia de branding.
+
+10) Manejo de errores con alert()
+Archivo: src/context/AuthContext.tsx
+Que significa:
+- Errores de login se muestran con alert nativo del navegador.
+Impacto:
+- Mala experiencia de usuario.
+- Dificulta estandarizar UX (toasts, mensajes inline, telemetria).
+
+11) Uso manual de <head> en App Router con meta dudosa
+Archivo: src/app/layout.tsx
+Que significa:
+- Se inserta <head> manualmente y meta "text/html;charset=UTF-8".
+- En Next App Router se recomienda metadata API (incluyendo charSet de forma estandar).
+Impacto:
+- Mantenimiento mas dificil.
+- Riesgo de comportamiento no esperado en SSR/hidratacion y SEO.
+
+12) lang del documento no coincide con idioma real
+Archivo: src/app/layout.tsx
+Que significa:
+- html lang="en" pero contenido principal esta en espanol.
+Impacto:
+- SEO e i18n suboptimos.
+- Lectores de pantalla pueden interpretar idioma incorrectamente.
+
+13) Archivo requirements.txt en rama frontend con deps Django
+Archivo: frontend/requirements.txt
+Que significa:
+- Hay un archivo de Python/Django en la rama de frontend Next.js.
+- Mezcla de stacks en carpeta frontend.
+Impacto:
+- Confusion operativa para el equipo.
+- Posibles errores en CI/CD o docs de setup.
+
+14) No hay pruebas frontend en el codigo actual
+Ruta: src/ (sin tests visibles)
+Que significa:
+- No se observan pruebas unitarias/integracion/e2e para auth, busqueda, layout o navegacion.
+Impacto:
+- Alto riesgo de regresiones.
+- Cambios en API o UI pueden romper funcionalidades sin deteccion temprana.
+
+Resumen general:
+- El frontend tiene base funcional de Next.js y UI construida.
+- El mayor bloqueo es la integracion con backend (auth + endpoints), seguido por tipado flojo y falta de testing.
+- Prioridad recomendada de arreglo:
+  1) puntos 1, 2, 3, 4
+  2) puntos 5, 6, 7
+  3) puntos 8, 10, 11, 12
+  4) puntos 9, 13, 14
