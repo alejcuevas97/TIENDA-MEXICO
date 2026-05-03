@@ -10,12 +10,12 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 interface User {
-  name: string;
+  username: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (name: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
 }
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("auth_user");
     setUser(null);
-    router.replace("/login");
+    router.replace("/login/");
   }, [router]);
 
   useEffect(() => {
@@ -48,13 +48,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const login = async (name: string, password: string) => {
+  const login = async (username: string, password: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}login/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await res.json();
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(data?.message || "Credenciales inválidas");
       }
 
-      const normalizedUser = data?.user ?? { name };
+      const normalizedUser = data?.user ?? { username };
       localStorage.setItem("auth_token", data.token);
       localStorage.setItem("auth_user", JSON.stringify(normalizedUser));
 
