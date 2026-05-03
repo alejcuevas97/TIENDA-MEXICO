@@ -54,5 +54,8 @@ def login(request):
     return Response({"user": serial.data}, status=status.HTTP_200_OK)
 
     
-
+@api_view(['GET'])
+def login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
 
