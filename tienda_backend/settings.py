@@ -9,8 +9,8 @@ env=environ.Env()
 environ.Env.read_env()
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=31)
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=2)
 }
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
