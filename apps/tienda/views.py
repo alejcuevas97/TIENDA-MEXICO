@@ -1,22 +1,21 @@
-from rest_framework.response import Response
-from rest_framework import status
-from apps.inventario.models import Inventario,Producto
-from rest_framework.views import APIView
-from .serializers import UserSerializersProd,ProductFilters
-from drf_spectacular.utils import extend_schema
+from rest_framework.viewsets import ModelViewSet,ReadOnlyModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from rest_framework.response import Response
+from apps.inventario.models import Producto
+from .serializers import UserSerializersProd
 
 
-#vistas para consultar todos los productos
-class ProdApiViews(APIView):
-    #lo utilizo para consultar datos
-    def get(self,request):
-        serial= UserSerializersProd(Producto.objects.all(), many=True)
-        return Response(status=status.HTTP_200_OK, data=serial.data)
-
-class InventarioViewSet(viewsets.ModelViewSet):
+# ✅ Vista principal con ModelViewSet para CRUD
+class ProdApiViews(ReadOnlyModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = UserSerializersProd
     filter_backends = [DjangoFilterBackend]
-    filterset_class = ProductFilters    
+    # Si tienes filtros personalizados, puedes habilitarlos aquí:
+    # filterset_class = ProductFilters
+
+#  Otra vista (si quieres mantenerla separada)
+class InventarioViewSet(ModelViewSet):
+    queryset = Producto.objects.all()
+    serializer_class = UserSerializersProd
+    filter_backends = [DjangoFilterBackend]
+    # filterset_class = ProductFilters

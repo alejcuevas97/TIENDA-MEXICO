@@ -1,26 +1,19 @@
-from django.urls import path
-from .views import InvApiViews,InvApiViewsDetail
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-
-
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from apps.inventario.views import  InvApiViews
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+    SpectacularRedocView,
+)
 
 urlpatternsInv = [
-    #ruta para consultar y agregar 
-    path('inventario/', InvApiViews.as_view()),
-    
-    #ruta para trabajr con todo  por lo relacionado con id
-    path('inventario/<int:id>', InvApiViewsDetail.as_view()),
-    
-
-
-    # Endpoint para obtener el esquema OpenAPI
+    # Endpoints para documentación y esquema OpenAPI
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
-
-    # Documentación interactiva con Swagger UI
     path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-
-    # Documentación interactiva con Redoc
     path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
+    
 ]
     
     
