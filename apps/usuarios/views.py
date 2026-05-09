@@ -20,6 +20,7 @@ from .serializers import UserAuthSerializers
 #Se crea para introducir los datos de usuario y contrasena
 @api_view(['POST'])
 def register(request):
+    
     serial = UserAuthSerializers(data=request.data)
 
     if serial.is_valid():
@@ -53,9 +54,6 @@ def login(request):
     serial = UserAuthSerializers(instance=user)
     return Response({"user": serial.data}, status=status.HTTP_200_OK)
 
-    
-@api_view(['GET'])
-def login(request):
-    username = request.data.get('username')
-    password = request.data.get('password')
+
+
 
