@@ -1,54 +1,19 @@
-from rest_framework.response import Response
 from rest_framework import status
-from .models import Inventario
-from rest_framework.views import APIView
-from .serializers import UserSerializersInv
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 
+from .models import Inventario
+from .serializers import UserSerializersInv
 
-#vistas para consultar todos los productos
-class InvApiViews(APIView):
-    #lo utilizo para consultar datos
-    def get(self,request):
-        serial= UserSerializersInv(Inventario.objects.all(), many=True)
-        return Response(status=status.HTTP_200_OK, data=serial.data)
-        
-    #lo utilizo para ingresar datos
-    def post(self,request):
-        serial=UserSerializersInv(data=request.data)
-        serial.is_valid(raise_exception=True)
-        serial.save()
-        return Response(status=status.HTTP_201_CREATED, data=serial.data)
 
-class InvApiViewsDetail(APIView):
-    #lo utilizo para consultar todos los objectos
-    def get_object(self,pk):
-        all= Inventario
-        try:
-            return all.objects.get( pk=pk)
-        except all.DoesNotExist:
-            return None
-    #utilizo para consultar por el ID
-    def get(self,request,id):
-        post= self.get_object(id)
-        serial=UserSerializersInv(post)
-        return Response(status=status.HTTP_200_OK, data=serial.data)
-    
-    #utilizo para actualizar por el id
-    def put(self,request,id):
-        post=self.get_object(id)
-        if(post==None):
-            return Response(status=status.HTTP_200_OK, data={'error':'Not found data'})
-        serial=UserSerializersInv(post, data=request.data)
-        if serial.is_valid():
-            serial.save()
-            return Response(status=status.HTTP_200_OK, data=serial.data)
-        return Response(serial.errors,status=status.HTTP_400_BAD_REQUEST)
-    
-    #utilizo para borrar por el id
-    def delete(self,request,id):
-        producto=self.get_object(id)
-        producto.delete()
-        response={'delete': True}
-        return Response(status=status.HTTP_200_OK, data=response)            
-    
+# Vista completa con ModelViewSet para CRUD
+@extend_schema(tags=["Inventario"])
+class InvApiViews(ModelViewSet):
+    queryset = Inventario.objects.all()
+    serializer_class = UserSerializersInv
+    filter_backends = [DjangoFilterBackend]
+    # Si quieres filtros personalizados:
+    # filterset_class = InventarioFilters
+

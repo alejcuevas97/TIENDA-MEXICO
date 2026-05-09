@@ -116,14 +116,19 @@ tienda_backend/                # Proyecto principal
 ## 🔑 Endpoints principales
 
 ### Autenticación
-- `POST /api/usuarios/register/` → Registro de usuario
-- `POST /api/usuarios/login/` → Inicio de sesión (JWT)
+- `POST /api/auth/register/` → Registro de usuario
+- `POST /api/auth/login/` → Inicio de sesión (JWT)
 
 ### Inventario
+- `GET /api/inventario/` → Listar inventario
+- `POST /api/inventario/` → Crear inventario
+- `PUT /api/inventario/{Codigo}/` → Actualizar inventario
+- `DELETE /api/inventario/{Codigo}/` → Eliminar inventario
+
+---
+### Productos
 - `GET /api/productos/` → Listar productos
-- `POST /api/productos/` → Crear producto
-- `PUT /api/productos/{id}/` → Actualizar producto
-- `DELETE /api/productos/{id}/` → Eliminar producto
+- `GET /api/productos/{id}/` → Eliminar producto
 
 ---
 
@@ -131,7 +136,7 @@ tienda_backend/                # Proyecto principal
 
 ### Registro
 ```json
-POST /api/usuarios/register/
+POST /api/auth/register/
 {
   "username": "alejandro",
   "email": "alejandro@mail.com",
@@ -141,7 +146,7 @@ POST /api/usuarios/register/
 
 ### Login
 ```json
-POST /api/usuarios/login/
+POST /api/auth/login/
 {
   "username": "alejandro",
   "password": "123456"

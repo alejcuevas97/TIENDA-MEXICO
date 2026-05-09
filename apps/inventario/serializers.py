@@ -7,3 +7,5 @@ class UserSerializersInv(ModelSerializer):
         model= Inventario
         fields='__all__'
         
+        
+        
