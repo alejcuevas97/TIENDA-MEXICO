@@ -87,15 +87,15 @@ WSGI_APPLICATION = 'tienda_backend.wsgi.application'
 
 
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+}"""
 
     
-"""DATABASES = {
+DATABASES = {
     'default': env.db(
         'DATABASE_URL',
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
